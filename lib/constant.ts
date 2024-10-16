@@ -1,1 +1,1 @@
-export const MAX_MAIL_LIMIT = 100;
+export const MAX_MAIL_LIMIT = 30;

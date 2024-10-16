@@ -16,23 +16,26 @@ export const processCsvFile = async (
     const csvString = event.target?.result as string;
     try {
       const jsonArray = await csv().fromString(csvString);
+      console.log("CSV to JSON:", jsonArray);
       const invalidRows = jsonArray.filter(
-        (item: any, index: number) => !item.name || !item.email
+        (item: any, index: number) => !item.FIRSTNAME || !item.EMAIL || !item.COMPANYNAME
       );
 
       if (invalidRows.length > 0) {
         onInvalidRows(invalidRows.length);
       } else {
         const emails = jsonArray.map((item: any) => ({
-          to: item.email,
-          name: item.name,
+          to: item.EMAIL,
+          name: item.FIRSTNAME,
           subject: TransformEmailContent(emailContent.subject, {
-            name: item.name,
-            email: item.email,
+            name: item.FIRSTNAME,
+            email: item.EMAIL,
+            companyName: item.COMPANYNAME
           }),
           text: TransformEmailContent(emailContent.body, {
-            name: item.name,
-            email: item.email,
+            name: item.FIRSTNAME,
+            email: item.EMAIL,
+            companyName: item.COMPANYNAME
           }),
         }));
         onValidRows(emails);
@@ -53,12 +56,13 @@ export const processCsvFile = async (
 
 export const TransformEmailContent = (
   content: string,
-  userDetails: { name: string; email: string }
+  userDetails: { name: string; email: string, companyName: string }
 ) => {
   // Replace {{name}} and {{email}}
   const transformedContent = content
     .replaceAll(/{{name}}/g, userDetails.name)
-    .replaceAll(/{{email}}/g, userDetails.email);
+    .replaceAll(/{{email}}/g, userDetails.email)
+    .replaceAll(/{{companyName}}/g, userDetails.companyName)
   return transformedContent;
 };
 

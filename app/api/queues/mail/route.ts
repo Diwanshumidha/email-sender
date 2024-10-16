@@ -17,7 +17,7 @@ export const emailQueue = Queue("api/queues/mail", async (job) => {
       subject,
       text,
     });
-
+    
     console.log("Mail sent");
 
     if (info.rejected.length > 0) {
@@ -26,6 +26,7 @@ export const emailQueue = Queue("api/queues/mail", async (job) => {
     }
   } catch (err) {
     console.log("Error sending mail:");
+    console.log(err);
     throw new Error("Error Sending Mail");
   }
 });

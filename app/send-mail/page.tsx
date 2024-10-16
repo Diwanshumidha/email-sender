@@ -17,14 +17,16 @@ import { TransformEmailContent } from "@/lib/utils";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { set } from "zod";
 
 const Page = () => {
   const { EmailContent } = useEmailContentStore();
 
   const [body, setBody] = useState(EmailContent.body);
   const [subject, setSubject] = useState(EmailContent.subject);
-  const [email, setEmail] = useState(EmailContent.subject);
+  const [email, setEmail] = useState("");
   const [name, setName] = useState("");
+  const [companyName, setCompanyName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,11 +40,13 @@ const Page = () => {
       const transformedSubject = TransformEmailContent(subject, {
         email: email,
         name: name,
+        companyName: companyName,
       });
 
       const transformedBody = TransformEmailContent(body, {
         email: email,
         name: name,
+        companyName: companyName,
       });
 
       setLoading(true);
@@ -61,7 +65,9 @@ const Page = () => {
         setError(res.error);
         return;
       }
-
+      setName("");
+      setEmail("");
+      setCompanyName("");
       toast.success("Emails sent successfully");
     } catch (err) {
       console.error("Error sending emails:", err);
@@ -110,6 +116,15 @@ const Page = () => {
                 placeholder="Subject of the emails"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
+              />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <Label htmlFor="company-name">Company Name</Label>
+              <Input
+                id="company-name"
+                placeholder="Company name"
+                value={companyName}
+                onChange={(e) => setCompanyName(e.target.value)}
               />
             </div>
             <div className="flex flex-col space-y-1.5">

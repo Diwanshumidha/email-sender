@@ -75,6 +75,7 @@ const Page = () => {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       e.preventDefault();
       const file = e.target.files?.[0];
+      console.log("File:", file);
       const parsed = csvFileSchema.safeParse(file);
       if (!parsed.success) {
         return setError("Invalid CSV file. Please check the format.");
@@ -151,7 +152,7 @@ const Page = () => {
                   <td className="py-2 px-4 border-b">{r.subject}</td>
                   <td className="py-2 px-4 border-b">
                     <button onClick={() => sendEmail(index)} disabled={loading}>
-                      Invoke
+                      Send Mail
                     </button>
                   </td>
                 </tr>
